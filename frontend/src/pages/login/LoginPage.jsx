@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { axiosReq } from '../../lib/axios.js';
+
 const LoginPage = () => {
   const queryClient = useQueryClient()
 
@@ -14,21 +16,9 @@ const LoginPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async ({ username, password }) => {
-
-      console.log('logging in')
       try {
-        let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json'
-          },
-          body: JSON.stringify({ username, password }),
-          credentials: 'include'
-        })
-
-        let data = res.json()
-
-        if (!res.ok) throw new Error(data.error)
+        let res = await axiosReq.post('/auth/login', { username, password })
+        return res.data
 
       } catch (error) {
         throw new Error(error.message)

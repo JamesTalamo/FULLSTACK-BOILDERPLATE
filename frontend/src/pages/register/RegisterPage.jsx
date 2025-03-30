@@ -5,6 +5,8 @@ import { useMutation } from '@tanstack/react-query'
 
 import { toast } from 'react-hot-toast'
 
+import { axiosReq } from '../../lib/axios.js'
+
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -18,20 +20,8 @@ const RegisterPage = () => {
     const { mutate, isError, error } = useMutation({
         mutationFn: async ({ username, password }) => {
             try {
-                let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password }),
-                    credentials: 'include'
-                })
-
-                const data = await res.json()
-
-                if (!res.ok) throw new Error(data.error)
-
-                return data
+                let res = await axiosReq.post('/auth/register', { username, password })
+                return res.data
 
             } catch (error) {
                 throw new Error(error.message)

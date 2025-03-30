@@ -11,6 +11,8 @@ import { Toaster } from 'react-hot-toast';
 
 import { useQueryClient, useQuery } from '@tanstack/react-query'
 
+import { axiosReq } from "./lib/axios.js"
+
 function App() {
 
   const queryClient = useQueryClient()
@@ -19,17 +21,10 @@ function App() {
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json'
-          },
-          credentials: 'include'
-        })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error)
 
-        return data
+        let res = await axiosReq.get('/auth/me')
+        return res.data
+
       } catch (error) {
         throw new Error(error.message)
       }
